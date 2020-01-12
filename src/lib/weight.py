@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import client.Fitbit as Fitbit
+from client import Fitbit
 
 
 # poundで取得されるのでkgに変換
@@ -15,9 +15,8 @@ client = Fitbit()
 START_DATE = "2020-01-01"
 END_DATE = "2020-01-11"
 
-weights = client.get_bodyweight(base_date=START_DATE, end_date=END_DATE)
-
-print(weights["weight"])
+weights = client.get_weights(START_DATE, END_DATE)
+print(weights)
 
 # weight = bodyweights["weight"][0]["weight"]
 # print(pound_to_kg(weight), "kg")

@@ -1,8 +1,12 @@
 import fitbit
 from ast import literal_eval
 
-import env as env
-TOKEN_FILE = "../token.txt"
+import sys
+sys.path.append('../src')
+
+import env as env  # noqa
+
+TOKEN_FILE = "token.txt"
 
 tokens = open(TOKEN_FILE).read()
 token_dict = literal_eval(tokens)
@@ -11,15 +15,19 @@ refresh_token = token_dict['refresh_token']
 
 
 class Fitbit():
+    def __init__(self, *args, **kwargs):
+        self.client = fitbit.Fitbit(env.FITBIT_CLIENT_ID,
+                                    env.FITBIT_CLIENT_SECRET,
+                                    access_token=access_token,
+                                    refresh_token=refresh_token,
+                                    refresh_cb=self.updateToken)
+
     def updateToken(self, token):
         f = open(TOKEN_FILE, 'w')
         f.write(str(token))
         f.close()
         return
 
-    def create(self):
-        return fitbit.Fitbit(env.FITBIT_CLIENT_ID,
-                             env.FITBIT_CLIENT_SECRET,
-                             access_token=access_token,
-                             refresh_token=refresh_token,
-                             refresh_cb=self.updateToken)
+    def get_weights(self, start_date, end_date):
+        return self.client.get_bodyweight(base_date=start_date,
+                                          end_date=end_date)["weight"]
