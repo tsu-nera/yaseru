@@ -34,12 +34,12 @@ class Fitbit():
 
         def pound_to_kg(pound):
             kg = pound * 0.454
-            return kg
+            return round(kg, 1)
 
         def convert(weight):
             return {
                 "date": weight["date"].encode(),
-                "weight": round(pound_to_kg(weight["weight"]), 1),
+                "weight": pound_to_kg(weight["weight"]),
                 "bmi": weight["bmi"]
             }
 
