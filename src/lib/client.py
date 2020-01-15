@@ -38,7 +38,7 @@ class Fitbit():
 
         def convert(weight):
             return {
-                "date": weight["date"].encode(),
+                "date": weight["date"],
                 "weight": pound_to_kg(weight["weight"]),
                 "bmi": weight["bmi"]
             }
