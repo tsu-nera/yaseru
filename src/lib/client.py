@@ -28,6 +28,9 @@ class Fitbit():
         f.close()
         return
 
+    def apply_converter(self, func, data):
+        return [func(x) for x in data]
+
     def get_weights(self, start_date, end_date):
         weights = self.client.get_bodyweight(base_date=start_date,
                                              end_date=end_date)["weight"]
@@ -43,4 +46,17 @@ class Fitbit():
                 "bmi": weight["bmi"]
             }
 
-        return [convert(weight) for weight in weights]
+        return self.apply_converter(convert, weights)
+
+    def get_activities(self, start_date, end_date):
+        activities = self.client.activities(date="2020-01-13")
+
+        def convert(data):
+            data
+            # return {
+            #     "date": weight["date"],
+            #     "weight": pound_to_kg(weight["weight"]),
+            #     "bmi": weight["bmi"]
+            # }
+
+        return self.apply_converter(convert, activities)
