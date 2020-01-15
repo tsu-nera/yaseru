@@ -4,9 +4,9 @@ from ast import literal_eval
 import sys
 sys.path.append('../src')
 
-import env as env  # noqa
+import src.env as env  # noqa
 
-TOKEN_FILE = "token.txt"
+TOKEN_FILE = "src/token.txt"
 
 tokens = open(TOKEN_FILE).read()
 token_dict = literal_eval(tokens)
