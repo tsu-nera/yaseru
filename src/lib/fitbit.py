@@ -55,8 +55,6 @@ class Fitbit():
         calories_in = self.client.get_calories_in(
             base_date=base_date, end_date=end_date)["foods-log-caloriesIn"]
 
-        print(calories_in)
-
         return [{
             "date": a["dateTime"],
             "calory": int(a["value"]),

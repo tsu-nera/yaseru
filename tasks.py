@@ -1,25 +1,20 @@
 import invoke
+
+import src.client as client
 import src.lib.weight as weight
 import src.lib.calory as calory
 
 
 @invoke.task
-def get_weights(c, base_date=None, end_date=None):
+def get_weights(c, base_date, end_date):
     weight.get_weights(base_date, end_date)
 
 
 @invoke.task
-def get_calories(c, base_date=None, end_date=None):
+def get_calories(c, base_date, end_date):
     calory.get_calories(base_date, end_date)
 
 
-# def trip(c, year, month, day):
-#     data_dir = "rawdata/trips"
-#     # now = datetime.now()
-#     # data_file = now.strftime('%y%m%d_%H%M%S') + "_trips.csv"
-#     data_file = "latest_trips.csv"
-#     data_path = data_dir + "/" + data_file
-
-#     command = "cd ubereats && rm ../{} -f && scrapy crawl -a year={} -a month={} -a day={} trip -o ../{}".format(  # noqa
-#         data_path, year, month, day, data_path)  # noqa
-#     invoke.run(command)
+@invoke.task
+def get_daily(c, year, month, day):
+    client.get_daily_data(year, month, day)
