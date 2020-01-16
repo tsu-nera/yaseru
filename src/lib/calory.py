@@ -6,9 +6,9 @@ import pandas as pd
 RAWDATA_PATH = "rawdata/calories.csv"
 
 
-def get_calories():
+def get_calories(base_date=None, end_date=None):
     client = Fitbit()
-    calories = client.get_calories("2019-12-01", "2019-12-31")
+    calories = client.get_calories(base_date, end_date)
     df = pd.DataFrame(calories)
     df.to_csv(RAWDATA_PATH, index=None)
 

@@ -6,9 +6,9 @@ import pandas as pd
 RAWDATA_PATH = "rawdata/weights.csv"
 
 
-def get_weights():
+def get_weights(base_date=None, end_date=None):
     client = Fitbit()
-    weights = client.get_weights("2020-01-01", "2020-01-15")
+    weights = client.get_weights(base_date, end_date)
     df = pd.DataFrame(weights)
     df.to_csv(RAWDATA_PATH, index=None)
 
