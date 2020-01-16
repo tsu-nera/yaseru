@@ -43,3 +43,25 @@ class Fitbit():
             }
 
         return self.apply_converter(convert, weights)
+
+    def get_calories(self, start_date, end_date):
+        calories = self.client.get_calories(
+            base_date=start_date, end_date=end_date)["activities-calories"]
+        calories_bmr = self.client.get_calories_bmr(
+            base_date=start_date, end_date=end_date)["activities-caloriesBMR"]
+        activity_calories = self.client.get_activity_calories(
+            base_date=start_date,
+            end_date=end_date)["activities-activityCalories"]
+        calories_in = self.client.get_calories_in(
+            base_date=start_date, end_date=end_date)["foods-log-caloriesIn"]
+
+        print(calories_in)
+
+        return [{
+            "dateTime": a["dateTime"],
+            "calories": a["value"],
+            "caloriesBMR": b["value"],
+            "activityCalories": c["value"],
+            "caloriesIn": d["value"]
+        } for a, b, c, d in zip(calories, calories_bmr, activity_calories,
+                                calories_in)]

@@ -9,5 +9,5 @@ def get_weights(c):
 
 
 @invoke.task
-def get_activities(c):
-    activity.get_activities()
+def get_calories(c):
+    activity.get_calories()

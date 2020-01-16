@@ -6,14 +6,14 @@ import pprint as pp
 # RAWDATA_PATH = "rawdata/activities.csv"
 
 
-def get_activities():
+def get_calories():
     client = Fitbit()
-    activities = client.get_activities("2020-01-01", "2020-01-15")
+    calories = client.get_calories("2020-01-01", "2020-01-16")
     # df = pd.DataFrame(activities)
     # df.to_csv(RAWDATA_PATH, index=None)
 
-    pp.pprint(activities)
+    pp.pprint(calories)
 
 
 if __name__ == '__main__':
-    get_activities()
+    get_calories()

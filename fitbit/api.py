@@ -16,8 +16,8 @@ class FitbitOauth2Client(object):
     AUTHORIZE_ENDPOINT = "https://www.fitbit.com"
     API_VERSION = 1
 
-    request_token_url = "%s/oauth2/token" % API_ENDPOINT
-    authorization_url = "%s/oauth2/authorize" % AUTHORIZE_ENDPOINT
+    request_token_url = "{}/oauth2/token".format(API_ENDPOINT)
+    authorization_url = "{}/oauth2/authorize".format(AUTHORIZE_ENDPOINT)
     access_token_url = request_token_url
     refresh_token_url = request_token_url
 
@@ -127,11 +127,6 @@ class Fitbit(object):
 
     API_ENDPOINT = "https://api.fitbit.com"
     API_VERSION = 1
-    WEEK_DAYS = [
-        'SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY',
-        'SATURDAY'
-    ]
-    PERIODS = ['1d', '7d', '30d', '1w', '1m', '3m', '6m', '1y', 'max']
 
     RESOURCE_LIST = [
         'body',
@@ -174,11 +169,6 @@ class Fitbit(object):
             underscore_resource = resource.replace('/', '_')
             setattr(self, underscore_resource,
                     curry(self._COLLECTION_RESOURCE, resource))
-
-            if resource not in ['body', 'glucose']:
-                # Body and Glucose entries are not currently able to be deleted
-                setattr(self, 'delete_%s' % underscore_resource,
-                        curry(self._DELETE_COLLECTION_RESOURCE, resource))
 
     def make_request(self, *args, **kwargs):
         # This should handle data level errors, improper requests, and bad
@@ -259,43 +249,6 @@ class Fitbit(object):
         url = base_url.format(*self._get_common_args(user_id), **kwargs)
         return self.make_request(url, data)
 
-    def _DELETE_COLLECTION_RESOURCE(self, resource, log_id):
-        """
-        deleting each type of collection data
-
-        Arguments:
-            resource, defined automatically via curry
-            log_id, required, log entry to delete
-
-        This builds the following methods::
-
-            delete_body(log_id)
-            delete_activities(log_id)
-            delete_foods_log(log_id)
-            delete_foods_log_water(log_id)
-            delete_sleep(log_id)
-            delete_heart(log_id)
-            delete_bp(log_id)
-
-        """
-        url = "{0}/{1}/user/-/{resource}/{log_id}.json".format(
-            *self._get_common_args(), resource=resource, log_id=log_id)
-        response = self.make_request(url, method='DELETE')
-        return response
-
-    def _resource_goal(self, resource, data={}, period=None):
-        """ Handles GETting and POSTing resource goals of all types """
-        url = "{0}/{1}/user/-/{resource}/goal{postfix}.json".format(
-            *self._get_common_args(),
-            resource=resource,
-            postfix=('s/' + period) if period else '')
-        return self.make_request(url, data=data)
-
-    def _filter_nones(self, data):
-        filter_nones = lambda item: item[1] is not None  # noqa
-        filtered_kwargs = list(filter(filter_nones, data.items()))
-        return {} if not filtered_kwargs else dict(filtered_kwargs)
-
     def get_bodyweight(self, base_date=None, user_id=None, end_date=None):
         return self._get_body('weight', base_date, user_id, end_date)
 
@@ -307,6 +260,63 @@ class Fitbit(object):
 
         kwargs = {'type_': type_}
         base_url = "{0}/{1}/user/{2}/body/log/{type_}/date/{date_string}.json"
+
+        if end_date:
+            end_string = self._get_date_string(end_date)
+            kwargs['date_string'] = '/'.join([base_date_string, end_string])
+        else:
+            kwargs['date_string'] = base_date_string
+
+        url = base_url.format(*self._get_common_args(user_id), **kwargs)
+        return self.make_request(url)
+
+    def get_calories(self, base_date=None, user_id=None, end_date=None):
+        return self._get_activities('calories', base_date, user_id, end_date)
+
+    def get_calories_bmr(self, base_date=None, user_id=None, end_date=None):
+        return self._get_activities('caloriesBMR', base_date, user_id,
+                                    end_date)
+
+    def get_activity_calories(self,
+                              base_date=None,
+                              user_id=None,
+                              end_date=None):
+        return self._get_activities('activityCalories', base_date, user_id,
+                                    end_date)
+
+    def _get_activities(self,
+                        type_,
+                        base_date=None,
+                        user_id=None,
+                        end_date=None):
+        if not base_date:
+            base_date = datetime.date.today()
+
+        base_date_string = self._get_date_string(base_date)
+
+        kwargs = {'type_': type_}
+        base_url = "{0}/{1}/user/{2}/activities/{type_}/date/{date_string}.json"  # noqa
+
+        if end_date:
+            end_string = self._get_date_string(end_date)
+            kwargs['date_string'] = '/'.join([base_date_string, end_string])
+        else:
+            kwargs['date_string'] = base_date_string
+
+        url = base_url.format(*self._get_common_args(user_id), **kwargs)
+        return self.make_request(url)
+
+    def get_calories_in(self, base_date=None, user_id=None, end_date=None):
+        return self._get_foods('caloriesIn', base_date, user_id, end_date)
+
+    def _get_foods(self, type_, base_date=None, user_id=None, end_date=None):
+        if not base_date:
+            base_date = datetime.date.today()
+
+        base_date_string = self._get_date_string(base_date)
+
+        kwargs = {'type_': type_}
+        base_url = "{0}/{1}/user/{2}/foods/log/{type_}/date/{date_string}.json"  # noqa
 
         if end_date:
             end_string = self._get_date_string(end_date)
