@@ -2,6 +2,8 @@
 
 デブ脱出プロジェクト
 
+https://github.com/tsu-nera/yaseru/blob/master/notebooks/weights_analysis.ipynb
+
 ## Links
 
 - https://dev.fitbit.com
