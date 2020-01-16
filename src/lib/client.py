@@ -35,14 +35,10 @@ class Fitbit():
         weights = self.client.get_bodyweight(base_date=start_date,
                                              end_date=end_date)["weight"]
 
-        def pound_to_kg(pound):
-            kg = pound * 0.454
-            return round(kg, 1)
-
         def convert(weight):
             return {
                 "date": weight["date"],
-                "weight": pound_to_kg(weight["weight"]),
+                "weight": weight["weight"],
                 "bmi": weight["bmi"]
             }
 

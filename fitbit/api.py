@@ -184,7 +184,7 @@ class Fitbit(object):
         # This should handle data level errors, improper requests, and bad
         # serialization
         headers = kwargs.get('headers', {})
-        headers.update({'Accept-Language': self.system})
+        headers.update({'Accept-Locale': self.system})
         kwargs['headers'] = headers
 
         method = kwargs.get('method', 'POST' if 'data' in kwargs else 'GET')
