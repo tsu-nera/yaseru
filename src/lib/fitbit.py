@@ -31,8 +31,8 @@ class Fitbit():
     def apply_converter(self, func, data):
         return [func(x) for x in data]
 
-    def get_weights(self, start_date, end_date):
-        weights = self.client.get_bodyweight(base_date=start_date,
+    def get_weights(self, base_date, end_date):
+        weights = self.client.get_bodyweight(base_date=base_date,
                                              end_date=end_date)["weight"]
 
         def convert(weight):
@@ -44,18 +44,16 @@ class Fitbit():
 
         return self.apply_converter(convert, weights)
 
-    def get_calories(self, start_date, end_date):
+    def get_calories(self, base_date, end_date):
         calories = self.client.get_calories(
-            base_date=start_date, end_date=end_date)["activities-calories"]
+            base_date=base_date, end_date=end_date)["activities-calories"]
         calories_bmr = self.client.get_calories_bmr(
-            base_date=start_date, end_date=end_date)["activities-caloriesBMR"]
+            base_date=base_date, end_date=end_date)["activities-caloriesBMR"]
         activity_calories = self.client.get_activity_calories(
-            base_date=start_date,
+            base_date=base_date,
             end_date=end_date)["activities-activityCalories"]
         calories_in = self.client.get_calories_in(
-            base_date=start_date, end_date=end_date)["foods-log-caloriesIn"]
-
-        print(calories_in)
+            base_date=base_date, end_date=end_date)["foods-log-caloriesIn"]
 
         return [{
             "date": a["dateTime"],

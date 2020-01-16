@@ -1,19 +1,22 @@
 # -*- coding: utf-8 -*-
-from .client import Fitbit
-import pprint as pp
+from .fitbit import Fitbit
+from pprint import pprint as pp
 import pandas as pd
 
 RAWDATA_PATH = "rawdata/calories.csv"
 
 
-def get_calories():
+def get_calories(base_date=None, end_date=None, debug=False):
     client = Fitbit()
-    calories = client.get_calories("2019-12-01", "2019-12-31")
+    calories = client.get_calories(base_date, end_date)
     df = pd.DataFrame(calories)
     df.to_csv(RAWDATA_PATH, index=None)
 
-    pp.pprint(calories)
+    if debug:
+        pp(calories)
+
+    return calories
 
 
 if __name__ == '__main__':
-    get_calories()
+    get_calories(debug=True)
