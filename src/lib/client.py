@@ -58,10 +58,11 @@ class Fitbit():
         print(calories_in)
 
         return [{
-            "dateTime": a["dateTime"],
-            "calories": a["value"],
-            "caloriesBMR": b["value"],
-            "activityCalories": c["value"],
-            "caloriesIn": d["value"]
+            "date": a["dateTime"],
+            "calory": int(a["value"]),
+            "calory_bmr": int(b["value"]),
+            "calory_activity": c["value"],
+            "calory_out": int(b["value"]) + int(c["value"]),
+            "calory_in": int(d["value"])
         } for a, b, c, d in zip(calories, calories_bmr, activity_calories,
                                 calories_in)]

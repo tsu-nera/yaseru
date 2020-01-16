@@ -1,6 +1,6 @@
 import invoke
 import src.lib.weight as weight
-import src.lib.activity as activity
+import src.lib.calory as calory
 
 
 @invoke.task
@@ -10,4 +10,4 @@ def get_weights(c):
 
 @invoke.task
 def get_calories(c):
-    activity.get_calories()
+    calory.get_calories()
