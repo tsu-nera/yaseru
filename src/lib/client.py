@@ -28,19 +28,41 @@ class Fitbit():
         f.close()
         return
 
+    def apply_converter(self, func, data):
+        return [func(x) for x in data]
+
     def get_weights(self, start_date, end_date):
         weights = self.client.get_bodyweight(base_date=start_date,
                                              end_date=end_date)["weight"]
 
-        def pound_to_kg(pound):
-            kg = pound * 0.454
-            return round(kg, 1)
-
         def convert(weight):
             return {
                 "date": weight["date"],
-                "weight": pound_to_kg(weight["weight"]),
+                "weight": weight["weight"],
                 "bmi": weight["bmi"]
             }
 
-        return [convert(weight) for weight in weights]
+        return self.apply_converter(convert, weights)
+
+    def get_calories(self, start_date, end_date):
+        calories = self.client.get_calories(
+            base_date=start_date, end_date=end_date)["activities-calories"]
+        calories_bmr = self.client.get_calories_bmr(
+            base_date=start_date, end_date=end_date)["activities-caloriesBMR"]
+        activity_calories = self.client.get_activity_calories(
+            base_date=start_date,
+            end_date=end_date)["activities-activityCalories"]
+        calories_in = self.client.get_calories_in(
+            base_date=start_date, end_date=end_date)["foods-log-caloriesIn"]
+
+        print(calories_in)
+
+        return [{
+            "date": a["dateTime"],
+            "calory": int(a["value"]),
+            "calory_bmr": int(b["value"]),
+            "calory_activity": c["value"],
+            "calory_out": int(b["value"]) + int(c["value"]),
+            "calory_in": int(d["value"])
+        } for a, b, c, d in zip(calories, calories_bmr, activity_calories,
+                                calories_in)]
