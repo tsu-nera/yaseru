@@ -1,28 +1,29 @@
-import invoke
+from invoke import task
 
 import src.client as client
 import src.lib.weight as weight
 import src.lib.calory as calory
+from src.lib.healthplanet import HealthPlanet
 
 import pandas as pd
 
 
-@invoke.task
+@task
 def get_weights(c, base_date, end_date):
     weight.get_weights(base_date, end_date)
 
 
-@invoke.task
+@task
 def get_calories(c, base_date, end_date):
     calory.get_calories(base_date, end_date)
 
 
-@invoke.task
+@task
 def get_daily(c, year, month, day):
     client.get_daily_data(year, month, day)
 
 
-@invoke.task
+@task
 def merge_daily_data(c):
     ALL_CALORIES_PATH = "data/all_calories.csv"
     ALL_WEIGHTS_PATH = "data/all_weights.csv"
@@ -42,3 +43,11 @@ def merge_daily_data(c):
     df_all_weights.to_csv(ALL_WEIGHTS_PATH, index=False)
     df_all_calories = merge_to_master(df_all_calories, df_daily_calory)
     df_all_calories.to_csv(ALL_CALORIES_PATH, index=False)
+
+
+@task
+def get_hp(c):
+    hp = HealthPlanet()
+    response = hp.get_innerscan()
+
+    print(response)
