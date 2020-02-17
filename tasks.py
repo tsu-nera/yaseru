@@ -47,8 +47,8 @@ def merge_daily_data(c):
 
 
 @task
-def get_hp(c):
+def get_hp(c, days):
     hp = HealthPlanet()
-    response = hp.get_innerscan()
+    response = hp.get_innerscan(int(days))
 
     pp.pprint(response)

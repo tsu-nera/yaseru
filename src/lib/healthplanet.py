@@ -95,7 +95,7 @@ class HealthPlanet():
     def _innerscan_formatter(self, input):
         data = input['data']
 
-        output = {}
+        output_dict = {}
 
         for d in data:
             date = d['date']
@@ -104,14 +104,19 @@ class HealthPlanet():
 
             tag_name = HP_TAG_DICT[tag]
 
-            if date in output.keys():
-                tmp = output[date]
+            if date in output_dict.keys():
+                tmp = output_dict[date]
                 tmp[tag_name] = value
-                output[date] = tmp
+                output_dict[date] = tmp
             else:
-                output[date] = {tag_name: value}
+                output_dict[date] = {tag_name: value}
 
-        return output
+        output_list = []
+        for k, v in output_dict.items():
+            v['date'] = k
+            output_list.append(v)
+
+        return output_list
 
     def get_innerscan(self, past_days=7):
         from_date = dt.now() - datetime.timedelta(days=past_days)
