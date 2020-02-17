@@ -114,7 +114,7 @@ class HealthPlanet(Base):
 
         output_list = []
         for k, v in output_dict.items():
-            v['date'] = dt.strptime(k, '%Y%m%d%H%M%S').strftime('%Y-%m-%d')
+            v['date'] = dt.strptime(k, '%Y%m%d%H%M%S')
 
             v[HP_TAG_NAME_BASAL_METABOLIC_RATE] = int(
                 v[HP_TAG_NAME_BASAL_METABOLIC_RATE])

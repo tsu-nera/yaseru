@@ -1,3 +1,5 @@
 .vscode
 rawdata
 .ipynb_checkpoints
+src/token.json
+.env

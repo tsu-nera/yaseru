@@ -6,7 +6,7 @@ sys.path.append('../src')
 
 import src.env as env  # noqa
 
-TOKEN_FILE = "src/token.txt"
+TOKEN_FILE = "src/token.json"
 
 tokens = open(TOKEN_FILE).read()
 token_dict = literal_eval(tokens)
@@ -37,12 +37,18 @@ class Fitbit():
 
         def convert(weight):
             return {
-                "date": weight["date"],
+                "date": "{} {}".format(weight["date"], weight["time"]),
                 "weight": weight["weight"],
                 "bmi": weight["bmi"]
             }
 
         return self.apply_converter(convert, weights)
+
+    def post_weight(self, weight, date, time=None, fat=None):
+        self.client.post_bodyweight(weight=weight,
+                                    date=date,
+                                    time=time,
+                                    fat=fat)
 
     def get_calories(self, base_date, end_date):
         calories = self.client.get_calories(
@@ -56,7 +62,7 @@ class Fitbit():
             base_date=base_date, end_date=end_date)["foods-log-caloriesIn"]
 
         return [{
-            "date": a["dateTime"],
+            "date": "{} {}".format(a["dateTime"], "23:59:59"),
             "calory": int(a["value"]),
             "calory_bmr": int(b["value"]),
             "calory_activity": c["value"],

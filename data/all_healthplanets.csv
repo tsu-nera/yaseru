@@ -1,2 +1,1 @@
-date,weight,body_fat_parcentage,muscle_mass,visceral_fat_level,basal_metabolic_rate,body_age,estimated_bone_mass
-2020-02-15,94.3,31.7,61.1,15.5,1863,46,3.3
+ basal_metabolic_rate, estimated_bone_mass, weight,body_age,body_fat_parcentage,date,muscle_mass,visceral_fat_level
