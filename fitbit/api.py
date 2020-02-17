@@ -326,3 +326,21 @@ class Fitbit(object):
 
         url = base_url.format(*self._get_common_args(user_id), **kwargs)
         return self.make_request(url)
+
+    def post_bodyweight(self, weight, date, time=None, fat=None):
+        payload = {'date': date, 'time': time}
+
+        weight_payload = payload
+        weight_payload['weight'] = weight
+        base_url = "{0}/{1}/user/{2}/body/log/weight.json"
+
+        url = base_url.format(*self._get_common_args())
+        self.make_request(url, data=weight_payload)
+
+        if fat:
+            fat_payload = payload
+            fat_payload['fat'] = fat
+            base_url = "{0}/{1}/user/{2}/body/log/fat.json"
+
+            url = base_url.format(*self._get_common_args())
+            self.make_request(url, data=fat_payload)

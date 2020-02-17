@@ -1,19 +1,8 @@
 from invoke import task
 
 from src.utils.daily import get_daily, merge_daily
-import src.lib.weight as weight
-import src.lib.calory as calory
+from src.lib.weight import Weight
 from src.lib.health_planet import HealthPlanet
-
-
-@task
-def get_weights(c, base_date, end_date):
-    weight.get_weights(base_date, end_date)
-
-
-@task
-def get_calories(c, base_date, end_date):
-    calory.get_calories(base_date, end_date)
 
 
 @task
@@ -36,3 +25,15 @@ def daily_today(c):
 @task
 def merge(c):
     merge_daily()
+
+
+@task
+def post_weight(c, value):
+    weight = Weight()
+    weight.post(value=float(value))
+
+
+@task
+def post_weight_fat(c, value, fat):
+    weight = Weight()
+    weight.post(value=float(value), fat=float(fat))
