@@ -12,7 +12,7 @@ from src.constants.healthplanet import HP_DEFAULT_RESPONSE_TYPE, HP_DEFAULT_GRAN
 from src.constants.healthplanet import HP_TAG_WEIGHT, HP_TAG_BODY_FAT_PARCENTAGE
 from src.constants.healthplanet import HP_TAG_MUSCLE_MASS, HP_TAG_VISCERAL_FAT_LEVEL
 from src.constants.healthplanet import HP_TAG_BASAL_METABOLIC_RATE, HP_TAG_BODY_AGE
-from src.constants.healthplanet import HP_TAG_ESTIMATED_BONE_MASS
+from src.constants.healthplanet import HP_TAG_ESTIMATED_BONE_MASS, HP_TAG_DICT
 
 # import sys
 # from pathlib import Path
@@ -92,8 +92,29 @@ class HealthPlanet():
         ]
         return ','.join(map(str, tag_list))
 
-    def get_innerscan(self):
-        from_date = dt.now() - datetime.timedelta(days=7)
+    def _innerscan_formatter(self, input):
+        data = input['data']
+
+        output = {}
+
+        for d in data:
+            date = d['date']
+            value = d['keydata']
+            tag = int(d['tag'])
+
+            tag_name = HP_TAG_DICT[tag]
+
+            if date in output.keys():
+                tmp = output[date]
+                tmp[tag_name] = value
+                output[date] = tmp
+            else:
+                output[date] = {tag_name: value}
+
+        return output
+
+    def get_innerscan(self, past_days=7):
+        from_date = dt.now() - datetime.timedelta(days=past_days)
         from_str = from_date.strftime('%Y%m%d%H%M%S')
         tags = self._create_tags()
         payload = {
@@ -102,5 +123,8 @@ class HealthPlanet():
             'tag': tags,
             'from': from_str,
         }
-        return requests.get(self._uri('/status/innerscan.json'),
-                            params=payload).json()
+
+        response = requests.get(self._uri('/status/innerscan.json'),
+                                params=payload)
+
+        return self._innerscan_formatter(response.json())
