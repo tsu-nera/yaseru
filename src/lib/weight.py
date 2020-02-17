@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
+
+from .base import Base
 from .fitbit import Fitbit
-from pprint import pprint as pp
-import pandas as pd
-
-RAWDATA_PATH = "rawdata/weights.csv"
 
 
-def get_weights(base_date=None, end_date=None, debug=False):
-    client = Fitbit()
-    weights = client.get_weights(base_date, end_date)
-    df = pd.DataFrame(weights)
-    df.to_csv(RAWDATA_PATH, index=None)
+class Weight(Base):
+    def __init__(self, *args, **kwargs):
+        self.client = Fitbit()
 
-    if debug:
-        pp(weights)
+    def date_format(self, datetime):
+        return datetime.strftime("%Y-%m-%d")
 
-    return weights
+    def get(self, base_datetime=None, end_datetime=None):
+        base_date = self.date_format(base_datetime)
+        end_date = self.date_format(end_datetime)
 
-
-if __name__ == '__main__':
-    get_weights(debug=True)
+        self.data = self.client.get_weights(base_date, end_date)
+        return self.data
