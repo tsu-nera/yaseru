@@ -13,6 +13,16 @@ def get_hp(c, days):
 
 
 @task
+def sync_hp_fitbit(c, days):
+    hp = HealthPlanet()
+    weight = Weight()
+    hp.get_pastdays(int(days))
+
+    for data in hp.data:
+        weight.post(data['weight'], data['date'], data['body_fat_parcentage'])
+
+
+@task
 def daily(c, year, month, day):
     get_daily(int(year), int(month), int(day))
 

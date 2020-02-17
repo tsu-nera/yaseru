@@ -1,5 +1,6 @@
 import datetime
 import pandas as pd
+import os
 
 from src.lib.weight import Weight
 from src.lib.calory import Calory
@@ -25,9 +26,14 @@ def get_daily(year=None, month=None, day=None):
     target_day_end = datetime.date(year, month,
                                    day) + datetime.timedelta(days=1)
 
+    # from Health Planet
+    hp.get_to_csv(DAILY_RAWDATA_HEALTHPLANET_PATH, target_day, target_day_end)
+    for data in hp.data:
+        weight.post(data['weight'], data['date'], data['body_fat_parcentage'])
+
+    # from Fitbit
     weight.get_to_csv(DAILY_RAWDATA_WEIGHT_PATH, target_day, target_day)
     calory.get_to_csv(DAILY_RAWDATA_CALORY_PATH, target_day, target_day)
-    hp.get_to_csv(DAILY_RAWDATA_HEALTHPLANET_PATH, target_day, target_day_end)
 
     weight.display()
     calory.display()
@@ -35,23 +41,24 @@ def get_daily(year=None, month=None, day=None):
 
 
 def merge_daily():
-    df_all_calories = pd.read_csv(ALL_CALORIES_PATH)
-    df_all_weights = pd.read_csv(ALL_WEIGHTS_PATH)
-    df_all_hps = pd.read_csv(ALL_HEALTHPLANETS_PATH)
-
-    df_daily_calory = pd.read_csv(DAILY_RAWDATA_CALORY_PATH)
-    df_daily_weight = pd.read_csv(DAILY_RAWDATA_WEIGHT_PATH)
-    df_daily_hp = pd.read_csv(DAILY_RAWDATA_HEALTHPLANET_PATH)
-
     def _merge_to_master(df_master, df_daily):
         return pd.concat([df_master,
                           df_daily]).drop_duplicates().sort_values("date")
 
-    df_all_weights = _merge_to_master(df_all_weights, df_daily_weight)
-    df_all_weights.to_csv(ALL_WEIGHTS_PATH, index=False)
+    def _is_valid_file(path):
+        return os.path.exists(path) and os.path.getsize(path) > 1
 
-    df_all_calories = _merge_to_master(df_all_calories, df_daily_calory)
-    df_all_calories.to_csv(ALL_CALORIES_PATH, index=False)
+    def _merge(all_data_path, target_data_path):
+        if not _is_valid_file(all_data_path) or not _is_valid_file(
+                target_data_path):
+            return
 
-    df_all_hps = _merge_to_master(df_all_hps, df_daily_hp)
-    df_all_hps.to_csv(ALL_HEALTHPLANETS_PATH, index=False)
+        df_all = pd.read_csv(all_data_path)
+        df_target = pd.read_csv(target_data_path)
+
+        df_all = _merge_to_master(df_all, df_target)
+        df_all.to_csv(all_data_path, index=False)
+
+    _merge(ALL_CALORIES_PATH, DAILY_RAWDATA_CALORY_PATH)
+    _merge(ALL_WEIGHTS_PATH, DAILY_RAWDATA_WEIGHT_PATH)
+    _merge(ALL_HEALTHPLANETS_PATH, DAILY_RAWDATA_HEALTHPLANET_PATH)

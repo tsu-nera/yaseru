@@ -6,6 +6,8 @@ import pprint as pp
 import datetime
 from datetime import datetime as dt
 
+import copy
+
 
 class Base(metaclass=ABCMeta):
     def __init__(self, *args, **kwargs):
@@ -23,13 +25,16 @@ class Base(metaclass=ABCMeta):
 
     def get_pastdays_to_csv(self, path, days=7):
         self.get_pastdays(days)
-        self.to_csv(path)
+
+        if len(self.data) != 0:
+            self.to_csv(path)
 
     def to_csv(self, path):
         index = []
         values = []
+        data = copy.deepcopy(self.data)
 
-        for d in self.data:
+        for d in data:
             index.append(d.pop('date'))
             values.append(d)
 
@@ -39,7 +44,9 @@ class Base(metaclass=ABCMeta):
 
     def get_to_csv(self, path, base_date=None, end_date=None):
         self.get(base_date, end_date)
-        self.to_csv(path)
+
+        if len(self.data) != 0:
+            self.to_csv(path)
 
     def display(self):
         pp.pprint(self.data)
