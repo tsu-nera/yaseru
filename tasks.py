@@ -1,10 +1,9 @@
 from invoke import task
-import pprint as pp
 
 from src.utils.daily import get_daily, merge_daily
 import src.lib.weight as weight
 import src.lib.calory as calory
-from src.lib.healthplanet import HealthPlanet
+from src.lib.health_planet import HealthPlanet
 
 
 @task
@@ -20,14 +19,13 @@ def get_calories(c, base_date, end_date):
 @task
 def get_hp(c, days):
     hp = HealthPlanet()
-    response = hp.get_innerscan(int(days))
-
-    pp.pprint(response)
+    hp.get_pastdays(int(days))
+    hp.display()
 
 
 @task
 def daily(c, year, month, day):
-    get_daily(year, month, day)
+    get_daily(int(year), int(month), int(day))
 
 
 @task

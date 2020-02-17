@@ -1,30 +1,26 @@
 import requests
-import datetime
 from datetime import datetime as dt
+from bs4 import BeautifulSoup
 
-from src.env import HP_USER_ID, HP_USER_PASSWORD, HP_CLIENT_ID, HP_CLIENT_SECRET  # noqa
+from src.env import HP_USER_ID, HP_USER_PASSWORD, HP_CLIENT_ID, HP_CLIENT_SECRET
+from .base import Base
 
-from bs4 import BeautifulSoup  # noqa
+from src.constants.health_planet import HP_HOST, HP_REDIRECT_URI, HP_DEFAULT_SCOPE
+from src.constants.health_planet import HP_DEFAULT_RESPONSE_TYPE, HP_DEFAULT_GRANT_TYPE
 
-from src.constants.healthplanet import HP_HOST, HP_REDIRECT_URI, HP_DEFAULT_SCOPE
-from src.constants.healthplanet import HP_DEFAULT_RESPONSE_TYPE, HP_DEFAULT_GRANT_TYPE
+from src.constants.health_planet import HP_TAG_WEIGHT, HP_TAG_NAME_WEIGHT, HP_TAG_BODY_FAT_PARCENTAGE
+from src.constants.health_planet import HP_TAG_NAME_BODY_FAT_PARCENTAGE
+from src.constants.health_planet import HP_TAG_MUSCLE_MASS, HP_TAG_NAME_MUSCLE_MASS
+from src.constants.health_planet import HP_TAG_VISCERAL_FAT_LEVEL, HP_TAG_NAME_VISCERAL_FAT_LEVEL
+from src.constants.health_planet import HP_TAG_BASAL_METABOLIC_RATE, HP_TAG_NAME_BASAL_METABOLIC_RATE
+from src.constants.health_planet import HP_TAG_BODY_AGE, HP_TAG_NAME_BODY_AGE
+from src.constants.health_planet import HP_TAG_ESTIMATED_BONE_MASS, HP_TAG_NAME_ESTIMATED_BONE_MASS
 
-from src.constants.healthplanet import HP_TAG_WEIGHT, HP_TAG_NAME_WEIGHT, HP_TAG_BODY_FAT_PARCENTAGE
-from src.constants.healthplanet import HP_TAG_NAME_BODY_FAT_PARCENTAGE
-from src.constants.healthplanet import HP_TAG_MUSCLE_MASS, HP_TAG_NAME_MUSCLE_MASS
-from src.constants.healthplanet import HP_TAG_VISCERAL_FAT_LEVEL, HP_TAG_NAME_VISCERAL_FAT_LEVEL
-from src.constants.healthplanet import HP_TAG_BASAL_METABOLIC_RATE, HP_TAG_NAME_BASAL_METABOLIC_RATE
-from src.constants.healthplanet import HP_TAG_BODY_AGE, HP_TAG_NAME_BODY_AGE
-from src.constants.healthplanet import HP_TAG_ESTIMATED_BONE_MASS, HP_TAG_NAME_ESTIMATED_BONE_MASS
-
-from src.constants.healthplanet import HP_TAG_DICT
-
-# import sys
-# from pathlib import Path
-# sys.path.append(str(Path(__file__).parent.parent.parent))
+from src.constants.health_planet import HP_DATE_TYPE_RECORD
+from src.constants.health_planet import HP_TAG_DICT
 
 
-class HealthPlanet():
+class HealthPlanet(Base):
     def __init__(self, *args, **kwargs):
         self.session = requests.Session()
         self.token = self._get_token()
@@ -118,8 +114,7 @@ class HealthPlanet():
 
         output_list = []
         for k, v in output_dict.items():
-            v['date'] = dt.strptime(k, '%Y%m%d%H%M%S')
-            output_list.append(v)
+            v['date'] = dt.strptime(k, '%Y%m%d%H%M%S').strftime('%Y-%m-%d')
 
             v[HP_TAG_NAME_BASAL_METABOLIC_RATE] = int(
                 v[HP_TAG_NAME_BASAL_METABOLIC_RATE])
@@ -133,20 +128,28 @@ class HealthPlanet():
                 v[HP_TAG_NAME_VISCERAL_FAT_LEVEL])
             v[HP_TAG_NAME_WEIGHT] = float(v[HP_TAG_NAME_WEIGHT])
 
+            output_list.append(v)
+
         return output_list
 
-    def get_innerscan(self, past_days=7):
-        from_date = dt.now() - datetime.timedelta(days=past_days)
-        from_str = from_date.strftime('%Y%m%d%H%M%S')
+    def date_format(self, datetime):
+        return datetime.strftime('%Y%m%d%H%M%S')
+
+    def get(self, base_datetime=None, end_datetime=None):
+        from_str = self.date_format(base_datetime)
+        to_str = self.date_format(end_datetime)
         tags = self._create_tags()
+
         payload = {
             'access_token': self.token,
-            'date': 1,
+            'date': HP_DATE_TYPE_RECORD,
             'tag': tags,
             'from': from_str,
+            'to': to_str
         }
 
         response = requests.get(self._uri('/status/innerscan.json'),
                                 params=payload)
 
-        return self._innerscan_formatter(response.json())
+        self.data = self._innerscan_formatter(response.json())
+        return self.data

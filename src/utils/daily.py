@@ -3,10 +3,13 @@ import pandas as pd
 
 from src.lib.weight import Weight
 from src.lib.calory import Calory
+from src.lib.health_planet import HealthPlanet
 
-DAILY_RAWDATA_WEIGHT_PATH = "rawdata/daily_weight.csv"
-DAILY_RAWDATA_CALORY_PATH = "rawdata/daily_calory.csv"
-DAILY_RAWDATA_HEALTHPLANET_PATH = "rawdata/daily_healthplanet.csv"
+RAWDATA_DIR = "rawdata"
+
+DAILY_RAWDATA_WEIGHT_PATH = RAWDATA_DIR + "/daily_weight.csv"
+DAILY_RAWDATA_CALORY_PATH = RAWDATA_DIR + "/daily_calory.csv"
+DAILY_RAWDATA_HEALTHPLANET_PATH = RAWDATA_DIR + "/daily_healthplanet.csv"
 
 ALL_CALORIES_PATH = "data/all_calories.csv"
 ALL_WEIGHTS_PATH = "data/all_weights.csv"
@@ -14,17 +17,21 @@ ALL_HEALTHPLANETS_PATH = "data/all_healthplanets.csv"
 
 
 def get_daily(year=None, month=None, day=None):
-
-    if not (year and month and day):
-        target_date = datetime.datetime.now().strftime("%Y-%m-%d")
-    else:
-        target_date = "{}-{}-{}".format(year, month.zfill(2), day.zfill(2))
-
     weight = Weight()
     calory = Calory()
+    hp = HealthPlanet()
 
-    weight.get_to_csv(DAILY_RAWDATA_WEIGHT_PATH, target_date, target_date)
-    calory.get_to_csv(DAILY_RAWDATA_CALORY_PATH, target_date, target_date)
+    target_day = datetime.date(year, month, day)
+    target_day_end = datetime.date(year, month,
+                                   day) + datetime.timedelta(days=1)
+
+    weight.get_to_csv(DAILY_RAWDATA_WEIGHT_PATH, target_day, target_day)
+    calory.get_to_csv(DAILY_RAWDATA_CALORY_PATH, target_day, target_day)
+    hp.get_to_csv(DAILY_RAWDATA_HEALTHPLANET_PATH, target_day, target_day_end)
+
+    weight.display()
+    calory.display()
+    hp.display()
 
 
 def merge_daily():

@@ -3,19 +3,39 @@ from abc import ABCMeta, abstractmethod
 import pandas as pd
 import pprint as pp
 
+import datetime
+from datetime import datetime as dt
+
 
 class Base(metaclass=ABCMeta):
     def __init__(self, *args, **kwargs):
         self.data = None
-        self.rawdata_path = None
 
     @abstractmethod
     def get(self, base_date=None, end_date=None):
         pass
 
+    def get_pastdays(self, days=7):
+        from_date = dt.now() - datetime.timedelta(days=days)
+        to_date = dt.now()
+
+        self.get(from_date, to_date)
+
+    def get_pastdays_to_csv(self, path, days=7):
+        self.get_pastdays(days)
+        self.to_csv(path)
+
     def to_csv(self, path):
-        df = pd.DataFrame(self.data)
-        df.to_csv(path, index=None)
+        index = []
+        values = []
+
+        for d in self.data:
+            index.append(d.pop('date'))
+            values.append(d)
+
+        df = pd.DataFrame(values, index=index)
+        df.index.name = 'date'
+        df.to_csv(path, index=True)
 
     def get_to_csv(self, path, base_date=None, end_date=None):
         self.get(base_date, end_date)
