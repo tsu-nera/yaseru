@@ -1,7 +1,7 @@
 from invoke import task
 import pprint as pp
 
-import src.client as client
+from src.utils.daily import get_daily
 import src.lib.weight as weight
 import src.lib.calory as calory
 from src.lib.healthplanet import HealthPlanet
@@ -20,8 +20,13 @@ def get_calories(c, base_date, end_date):
 
 
 @task
-def get_daily(c, year, month, day):
-    client.get_daily_data(year, month, day)
+def daily(c, year, month, day):
+    get_daily(year, month, day)
+
+
+@task
+def daily_today(c):
+    get_daily()
 
 
 @task

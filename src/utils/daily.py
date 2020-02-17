@@ -8,12 +8,12 @@ DAILY_RAWDATA_WEIGHT_PATH = "rawdata/daily_weight.csv"
 DAILY_RAWDATA_CALORY_PATH = "rawdata/daily_calory.csv"
 
 
-def get_daily_data(year, month, day):
+def get_daily(year=None, month=None, day=None):
 
     if not (year and month and day):
         target_date = datetime.datetime.now().strftime("%Y-%m-%d")
     else:
-        target_date = "{}-{}-{}".format(year, month, day)
+        target_date = "{}-{}-{}".format(year, month.zfill(2), day.zfill(2))
 
     df_weight = pd.DataFrame(weight.get_weights(target_date, target_date))
     df_calory = pd.DataFrame(calory.get_calories(target_date, target_date))

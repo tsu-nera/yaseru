@@ -126,8 +126,7 @@ class HealthPlanet():
             v[HP_TAG_NAME_BODY_AGE] = int(v[HP_TAG_NAME_BODY_AGE])
             v[HP_TAG_NAME_BODY_FAT_PARCENTAGE] = float(
                 v[HP_TAG_NAME_BODY_FAT_PARCENTAGE])
-            v[HP_TAG_NAME_BODY_FAT_PARCENTAGE] = float(
-                v[HP_TAG_NAME_BODY_FAT_PARCENTAGE])
+            v[HP_TAG_NAME_MUSCLE_MASS] = float(v[HP_TAG_NAME_MUSCLE_MASS])
             v[HP_TAG_NAME_ESTIMATED_BONE_MASS] = float(
                 v[HP_TAG_NAME_ESTIMATED_BONE_MASS])
             v[HP_TAG_NAME_VISCERAL_FAT_LEVEL] = float(
