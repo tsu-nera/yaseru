@@ -37,7 +37,7 @@ class Fitbit():
 
         def convert(weight):
             return {
-                "date": weight["date"],
+                "date": "{} {}".format(weight["date"], weight["time"]),
                 "weight": weight["weight"],
                 "bmi": weight["bmi"]
             }
@@ -62,7 +62,7 @@ class Fitbit():
             base_date=base_date, end_date=end_date)["foods-log-caloriesIn"]
 
         return [{
-            "date": a["dateTime"],
+            "date": "{} {}".format(a["dateTime"], "23:59:59"),
             "calory": int(a["value"]),
             "calory_bmr": int(b["value"]),
             "calory_activity": c["value"],
