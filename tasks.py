@@ -1,4 +1,5 @@
 from invoke import task
+import pprint as pp
 
 import src.client as client
 import src.lib.weight as weight
@@ -50,4 +51,4 @@ def get_hp(c):
     hp = HealthPlanet()
     response = hp.get_innerscan()
 
-    print(response)
+    pp.pprint(response)

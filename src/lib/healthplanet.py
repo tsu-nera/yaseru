@@ -2,21 +2,21 @@ import requests
 import datetime
 from datetime import datetime as dt
 
-import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).parent.parent.parent))
-
-from src.env import HEALTHPLANET_CLIENT_ID, HEALTHPLANET_CLIENT_SECRET  # noqa
-from src.env import HEALTHPLANET_USER_ID, HEALTHPLANET_USER_PASSWORD  # noqa
+from src.env import HP_USER_ID, HP_USER_PASSWORD, HP_CLIENT_ID, HP_CLIENT_SECRET  # noqa
 
 from bs4 import BeautifulSoup  # noqa
 
-HOST = 'www.healthplanet.jp'
-REDIRECT_URI = 'https://www.healthplanet.jp/success.html'
-DEFAULT_SCOPE = 'innerscan'
-DEFAULT_RESPONSE_TYPE = 'code'
-DEFAULT_GRANT_TYPE = 'authorization_code'
-SCOPE_DAYS = 1
+from src.constants.healthplanet import HP_HOST, HP_REDIRECT_URI, HP_DEFAULT_SCOPE
+from src.constants.healthplanet import HP_DEFAULT_RESPONSE_TYPE, HP_DEFAULT_GRANT_TYPE
+
+from src.constants.healthplanet import HP_TAG_WEIGHT, HP_TAG_BODY_FAT_PARCENTAGE
+from src.constants.healthplanet import HP_TAG_MUSCLE_MASS, HP_TAG_VISCERAL_FAT_LEVEL
+from src.constants.healthplanet import HP_TAG_BASAL_METABOLIC_RATE, HP_TAG_BODY_AGE
+from src.constants.healthplanet import HP_TAG_ESTIMATED_BONE_MASS
+
+# import sys
+# from pathlib import Path
+# sys.path.append(str(Path(__file__).parent.parent.parent))
 
 
 class HealthPlanet():
@@ -25,21 +25,21 @@ class HealthPlanet():
         self.token = self._get_token()
 
     def _uri(self, path):
-        return 'https://{0}{1}'.format(HOST, path)
+        return 'https://{0}{1}'.format(HP_HOST, path)
 
     def _auth(self):
         payload = {
-            'client_id': HEALTHPLANET_CLIENT_ID,
-            'redirect_uri': REDIRECT_URI,
-            'scope': DEFAULT_SCOPE,
-            'response_type': DEFAULT_RESPONSE_TYPE,
+            'client_id': HP_CLIENT_ID,
+            'redirect_uri': HP_REDIRECT_URI,
+            'scope': HP_DEFAULT_SCOPE,
+            'response_type': HP_DEFAULT_RESPONSE_TYPE,
         }
         return self.session.get(self._uri('/oauth/auth'), params=payload)
 
     def _login(self, url):
         payload = {
-            'loginId': HEALTHPLANET_USER_ID,
-            'passwd': HEALTHPLANET_USER_PASSWORD,
+            'loginId': HP_USER_ID,
+            'passwd': HP_USER_PASSWORD,
             'send': 1,
             'url': url,
         }
@@ -50,11 +50,11 @@ class HealthPlanet():
 
     def _get_access_token(self, code):
         payload = {
-            'client_id': HEALTHPLANET_CLIENT_ID,
-            'client_secret': HEALTHPLANET_CLIENT_SECRET,
-            'redirect_uri': REDIRECT_URI,
+            'client_id': HP_CLIENT_ID,
+            'client_secret': HP_CLIENT_SECRET,
+            'redirect_uri': HP_REDIRECT_URI,
             'code': code,
-            'grant_type': DEFAULT_GRANT_TYPE,
+            'grant_type': HP_DEFAULT_GRANT_TYPE,
         }
         return requests.post(self._uri('/oauth/token'), params=payload)
 
@@ -84,13 +84,22 @@ class HealthPlanet():
         code = self._get_code(approve_response.url)
         return self._get_access_token(code).json()['access_token']
 
+    def _create_tags(self):
+        tag_list = [
+            HP_TAG_WEIGHT, HP_TAG_BODY_FAT_PARCENTAGE, HP_TAG_MUSCLE_MASS,
+            HP_TAG_VISCERAL_FAT_LEVEL, HP_TAG_BASAL_METABOLIC_RATE,
+            HP_TAG_BODY_AGE, HP_TAG_ESTIMATED_BONE_MASS
+        ]
+        return ','.join(map(str, tag_list))
+
     def get_innerscan(self):
-        from_date = dt.now() - datetime.timedelta(days=SCOPE_DAYS)
+        from_date = dt.now() - datetime.timedelta(days=7)
         from_str = from_date.strftime('%Y%m%d%H%M%S')
+        tags = self._create_tags()
         payload = {
             'access_token': self.token,
             'date': 1,
-            'tag': '6021,6022',
+            'tag': tags,
             'from': from_str,
         }
         return requests.get(self._uri('/status/innerscan.json'),
