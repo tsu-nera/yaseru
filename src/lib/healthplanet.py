@@ -9,10 +9,15 @@ from bs4 import BeautifulSoup  # noqa
 from src.constants.healthplanet import HP_HOST, HP_REDIRECT_URI, HP_DEFAULT_SCOPE
 from src.constants.healthplanet import HP_DEFAULT_RESPONSE_TYPE, HP_DEFAULT_GRANT_TYPE
 
-from src.constants.healthplanet import HP_TAG_WEIGHT, HP_TAG_BODY_FAT_PARCENTAGE
-from src.constants.healthplanet import HP_TAG_MUSCLE_MASS, HP_TAG_VISCERAL_FAT_LEVEL
-from src.constants.healthplanet import HP_TAG_BASAL_METABOLIC_RATE, HP_TAG_BODY_AGE
-from src.constants.healthplanet import HP_TAG_ESTIMATED_BONE_MASS, HP_TAG_DICT
+from src.constants.healthplanet import HP_TAG_WEIGHT, HP_TAG_NAME_WEIGHT, HP_TAG_BODY_FAT_PARCENTAGE
+from src.constants.healthplanet import HP_TAG_NAME_BODY_FAT_PARCENTAGE
+from src.constants.healthplanet import HP_TAG_MUSCLE_MASS, HP_TAG_NAME_MUSCLE_MASS
+from src.constants.healthplanet import HP_TAG_VISCERAL_FAT_LEVEL, HP_TAG_NAME_VISCERAL_FAT_LEVEL
+from src.constants.healthplanet import HP_TAG_BASAL_METABOLIC_RATE, HP_TAG_NAME_BASAL_METABOLIC_RATE
+from src.constants.healthplanet import HP_TAG_BODY_AGE, HP_TAG_NAME_BODY_AGE
+from src.constants.healthplanet import HP_TAG_ESTIMATED_BONE_MASS, HP_TAG_NAME_ESTIMATED_BONE_MASS
+
+from src.constants.healthplanet import HP_TAG_DICT
 
 # import sys
 # from pathlib import Path
@@ -113,8 +118,21 @@ class HealthPlanet():
 
         output_list = []
         for k, v in output_dict.items():
-            v['date'] = k
+            v['date'] = dt.strptime(k, '%Y%m%d%H%M%S')
             output_list.append(v)
+
+            v[HP_TAG_NAME_BASAL_METABOLIC_RATE] = int(
+                v[HP_TAG_NAME_BASAL_METABOLIC_RATE])
+            v[HP_TAG_NAME_BODY_AGE] = int(v[HP_TAG_NAME_BODY_AGE])
+            v[HP_TAG_NAME_BODY_FAT_PARCENTAGE] = float(
+                v[HP_TAG_NAME_BODY_FAT_PARCENTAGE])
+            v[HP_TAG_NAME_BODY_FAT_PARCENTAGE] = float(
+                v[HP_TAG_NAME_BODY_FAT_PARCENTAGE])
+            v[HP_TAG_NAME_ESTIMATED_BONE_MASS] = float(
+                v[HP_TAG_NAME_ESTIMATED_BONE_MASS])
+            v[HP_TAG_NAME_VISCERAL_FAT_LEVEL] = float(
+                v[HP_TAG_NAME_VISCERAL_FAT_LEVEL])
+            v[HP_TAG_NAME_WEIGHT] = float(v[HP_TAG_NAME_WEIGHT])
 
         return output_list
 
