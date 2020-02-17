@@ -20,6 +20,14 @@ def get_calories(c, base_date, end_date):
 
 
 @task
+def get_hp(c, days):
+    hp = HealthPlanet()
+    response = hp.get_innerscan(int(days))
+
+    pp.pprint(response)
+
+
+@task
 def daily(c, year, month, day):
     get_daily(year, month, day)
 
@@ -49,11 +57,3 @@ def merge_daily_data(c):
     df_all_weights.to_csv(ALL_WEIGHTS_PATH, index=False)
     df_all_calories = merge_to_master(df_all_calories, df_daily_calory)
     df_all_calories.to_csv(ALL_CALORIES_PATH, index=False)
-
-
-@task
-def get_hp(c, days):
-    hp = HealthPlanet()
-    response = hp.get_innerscan(int(days))
-
-    pp.pprint(response)

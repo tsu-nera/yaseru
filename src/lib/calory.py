@@ -1,22 +1,14 @@
 # -*- coding: utf-8 -*-
+
+from .base import Base
 from .fitbit import Fitbit
-from pprint import pprint as pp
-import pandas as pd
-
-RAWDATA_PATH = "rawdata/calories.csv"
 
 
-def get_calories(base_date=None, end_date=None, debug=False):
-    client = Fitbit()
-    calories = client.get_calories(base_date, end_date)
-    df = pd.DataFrame(calories)
-    df.to_csv(RAWDATA_PATH, index=None)
+class Calory(Base):
+    def __init__(self, *args, **kwargs):
+        self.client = Fitbit()
 
-    if debug:
-        pp(calories)
+    def get(self, base_date=None, end_date=None):
+        self.data = self.client.get_calories(base_date, end_date)
 
-    return calories
-
-
-if __name__ == '__main__':
-    get_calories(debug=True)
+        return self.data
