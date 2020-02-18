@@ -19,6 +19,8 @@ def sync_hp_fitbit(c, days):
     hp.get_pastdays(int(days))
 
     for data in hp.data:
+        print('{} - 体重{}kg/体脂肪率{}%'.format(data['date'], data['weight'],
+                                           data['body_fat_parcentage']))
         weight.post(data['weight'], data['date'], data['body_fat_parcentage'])
 
 
