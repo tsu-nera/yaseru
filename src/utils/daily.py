@@ -22,9 +22,11 @@ def get_daily(year=None, month=None, day=None):
     calory = Calory()
     hp = HealthPlanet()
 
-    target_day = datetime.date(year, month, day)
-    target_day_end = datetime.date(year, month,
-                                   day) + datetime.timedelta(days=1)
+    if year and month and day:
+        target_day = datetime.date(year, month, day)
+    else:
+        target_day = datetime.datetime.now()
+    target_day_end = target_day + datetime.timedelta(days=1)
 
     # from Health Planet
     hp.get_to_csv(DAILY_RAWDATA_HEALTHPLANET_PATH, target_day, target_day_end)
