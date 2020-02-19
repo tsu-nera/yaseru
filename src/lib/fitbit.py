@@ -31,18 +31,35 @@ class Fitbit():
     def apply_converter(self, func, data):
         return [func(x) for x in data]
 
+    def _date_time(self, date, time):
+        return "{} {}".format(date, time)
+
     def get_weights(self, base_date, end_date):
         weights = self.client.get_bodyweight(base_date=base_date,
                                              end_date=end_date)["weight"]
-
-        def convert(weight):
-            return {
-                "date": "{} {}".format(weight["date"], weight["time"]),
-                "weight": weight["weight"],
-                "bmi": weight["bmi"]
+        weight_dict = {}
+        for data in weights:
+            datetime = self._date_time(data['date'], data['time'])
+            weight_dict[datetime] = {
+                'date': datetime,
+                'weight': data['weight'],
+                'bmi': data['bmi']
             }
 
-        return self.apply_converter(convert, weights)
+        fats = self.client.get_bodyfat(base_date=base_date,
+                                       end_date=end_date)['fat']
+
+        fat_dict = {}
+        for data in fats:
+            datetime = self._date_time(data['date'], data['time'])
+            fat_dict[datetime] = {'date': datetime, 'fat': data['fat']}
+
+        for k, v in fat_dict.items():
+            tmp = weight_dict[k]
+            tmp['fat'] = v['fat']
+            weight_dict[k] = tmp
+
+        return list(weight_dict.values())
 
     def post_weight(self, weight, date, time=None, fat=None):
         self.client.post_bodyweight(weight=weight,
