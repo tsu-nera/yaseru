@@ -136,6 +136,9 @@ class HealthPlanet(Base):
         return datetime.strftime('%Y%m%d%H%M%S')
 
     def get(self, base_datetime=None, end_datetime=None):
+        # baseの日付を00:00:00に設定
+        base_datetime = base_datetime.date()
+
         from_str = self.date_format(base_datetime)
         to_str = self.date_format(end_datetime)
         tags = self._create_tags()

@@ -19,10 +19,9 @@ def get_daily(year=None, month=None, day=None):
         target_day = datetime.date(year, month, day)
     else:
         target_day = datetime.datetime.now()
-    target_day_end = target_day + datetime.timedelta(days=1)
 
     # from Health Planet
-    hp.get_to_csv(DAILY_RAWDATA_HEALTHPLANET_PATH, target_day, target_day_end)
+    hp.get_to_csv(DAILY_RAWDATA_HEALTHPLANET_PATH, target_day, target_day)
     for data in hp.data:
         weight.post(data['weight'], data['date'], data['body_fat_parcentage'])
 
