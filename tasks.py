@@ -5,7 +5,7 @@ from src.lib.weight import Weight
 from src.lib.calory import Calory
 from src.lib.health_planet import HealthPlanet
 
-from src.constants.common import DAILY_RAWDATA_WEIGHT_PATH, DAILY_RAWDATA_CALORY_PATH, DAILY_RAWDATA_HEALTHPLANET_PATH
+from src.constants.common import DAILY_RAWDATA_WEIGHT_PATH, DAILY_RAWDATA_CALORY_PATH, DAILY_RAWDATA_HEALTHPLANET_PATH  # noqa
 
 
 @task
