@@ -13,6 +13,12 @@ def get_hp(c, days):
 
 
 @task
+def save_hp(c, days):
+    hp = HealthPlanet()
+    hp.get_pastdays_to_csv('rawdata/daily_healthplanet.csv', int(days))
+
+
+@task
 def sync_hp_fitbit(c, days):
     hp = HealthPlanet()
     weight = Weight()
