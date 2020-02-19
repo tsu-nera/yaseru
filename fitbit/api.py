@@ -252,6 +252,9 @@ class Fitbit(object):
     def get_bodyweight(self, base_date=None, user_id=None, end_date=None):
         return self._get_body('weight', base_date, user_id, end_date)
 
+    def get_bodyfat(self, base_date=None, user_id=None, end_date=None):
+        return self._get_body('fat', base_date, user_id, end_date)
+
     def _get_body(self, type_, base_date=None, user_id=None, end_date=None):
         if not base_date:
             base_date = datetime.date.today()

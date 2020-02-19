@@ -7,6 +7,7 @@ https://github.com/tsu-nera/yaseru/blob/master/notebooks/weights_analysis.ipynb
 ## データ取得項目
 
 * 体重
+* BMI
 * 体脂肪率
 * 筋肉量
 * 内臓脂肪
@@ -25,6 +26,7 @@ https://github.com/tsu-nera/yaseru/blob/master/notebooks/weights_analysis.ipynb
 
 ## References
 
-- https://dev.fitbit.com
-- https://dev.fitbit.com/build/reference/web-api/
-- https://github.com/orcasgit/python-fitbit
+- [Fitbit Developper](https://dev.fitbit.com)
+- [Fitbit API Reference](https://dev.fitbit.com/build/reference/web-api/)
+- [python-fitbit](https://github.com/orcasgit/python-fitbit)
+- [Health Planet API仕様書 Ver1.0](https://www.healthplanet.jp/apis/api.html)
