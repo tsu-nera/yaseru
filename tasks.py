@@ -1,8 +1,38 @@
+import datetime
 from invoke import task
 
 from src.utils.daily import get_daily, merge_daily
 from src.lib.weight import Weight
+from src.lib.calory import Calory
 from src.lib.health_planet import HealthPlanet
+
+from src.constants.common import DAILY_RAWDATA_WEIGHT_PATH, DAILY_RAWDATA_CALORY_PATH, DAILY_RAWDATA_HEALTHPLANET_PATH
+
+
+@task
+def get_weight(c, days):
+    weight = Weight()
+    weight.get_pastdays(int(days))
+    weight.display()
+
+
+@task
+def save_weight(c, days):
+    weight = Weight()
+    weight.get_pastdays_to_csv(DAILY_RAWDATA_WEIGHT_PATH, int(days))
+
+
+@task
+def get_calory(c, days):
+    calory = Calory()
+    calory.get_pastdays(int(days))
+    calory.display()
+
+
+@task
+def save_calory(c, days):
+    calory = Calory()
+    calory.get_pastdays_to_csv(DAILY_RAWDATA_CALORY_PATH, int(days))
 
 
 @task
@@ -15,7 +45,7 @@ def get_hp(c, days):
 @task
 def save_hp(c, days):
     hp = HealthPlanet()
-    hp.get_pastdays_to_csv('rawdata/daily_healthplanet.csv', int(days))
+    hp.get_pastdays_to_csv(DAILY_RAWDATA_CALORY_PATH, int(days))
 
 
 @task
