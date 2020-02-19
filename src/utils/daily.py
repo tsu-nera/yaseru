@@ -44,8 +44,13 @@ def get_daily(year=None, month=None, day=None):
 
 def merge_daily():
     def _merge_to_master(df_master, df_daily):
-        return pd.concat([df_master,
-                          df_daily]).drop_duplicates().sort_values("date")
+        return pd.concat([df_master, df_daily], sort=False).drop_duplicates(
+            subset=["date", "weight"]).sort_values("date")
+
+    def _merge_to_master_for_calory(df_master, df_daily):
+        return pd.concat(
+            [df_master, df_daily],
+            sort=False).drop_duplicates(subset=["date"]).sort_values("date")
 
     def _is_valid_file(path):
         return os.path.exists(path) and os.path.getsize(path) > 1
@@ -58,7 +63,11 @@ def merge_daily():
         df_all = pd.read_csv(all_data_path)
         df_target = pd.read_csv(target_data_path)
 
-        df_all = _merge_to_master(df_all, df_target)
+        if "calories" in all_data_path:
+            df_all = _merge_to_master_for_calory(df_all, df_target)
+        else:
+            df_all = _merge_to_master(df_all, df_target)
+
         df_all.to_csv(all_data_path, index=False)
 
     _merge(ALL_CALORIES_PATH, DAILY_RAWDATA_CALORY_PATH)
