@@ -1,4 +1,3 @@
-import datetime
 from invoke import task
 
 from src.utils.daily import get_daily, merge_daily
@@ -45,7 +44,7 @@ def get_hp(c, days):
 @task
 def save_hp(c, days):
     hp = HealthPlanet()
-    hp.get_pastdays_to_csv(DAILY_RAWDATA_CALORY_PATH, int(days))
+    hp.get_pastdays_to_csv(DAILY_RAWDATA_HEALTHPLANET_PATH, int(days))
 
 
 @task
