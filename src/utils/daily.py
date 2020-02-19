@@ -16,18 +16,23 @@ def get_daily(year=None, month=None, day=None):
     hp = HealthPlanet()
 
     if year and month and day:
-        target_day = datetime.date(year, month, day)
+        base_datetime = datetime.datetime(year, month, day, 0, 0, 0)
+        end_datetime = datetime.datetime(year, month, day, 23, 59, 59)
     else:
-        target_day = datetime.datetime.now()
+        now = datetime.datetime.now()
+        base_datetime = datetime.datetime(now.year, now.month, now.day, 0, 0,
+                                          0)
+        end_datetime = datetime.datetime(now.year, now.month, now.day, 23, 59,
+                                         59)
 
     # from Health Planet
-    hp.get_to_csv(DAILY_RAWDATA_HEALTHPLANET_PATH, target_day, target_day)
+    hp.get_to_csv(DAILY_RAWDATA_HEALTHPLANET_PATH, base_datetime, end_datetime)
     for data in hp.data:
         weight.post(data['weight'], data['date'], data['body_fat_parcentage'])
 
     # from Fitbit
-    weight.get_to_csv(DAILY_RAWDATA_WEIGHT_PATH, target_day, target_day)
-    calory.get_to_csv(DAILY_RAWDATA_CALORY_PATH, target_day, target_day)
+    weight.get_to_csv(DAILY_RAWDATA_WEIGHT_PATH, base_datetime, end_datetime)
+    calory.get_to_csv(DAILY_RAWDATA_CALORY_PATH, base_datetime, end_datetime)
 
     weight.display()
     calory.display()
