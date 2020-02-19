@@ -4,6 +4,11 @@
 
 https://github.com/tsu-nera/yaseru/blob/master/notebooks/weights_analysis.ipynb
 
+## データ取得元
+
+* [Fitbit](https://www.fitbit.com/)
+* [HealthPlanet(タニタ)](https://www.healthplanet.jp/)
+
 ## Links
 
 - https://dev.fitbit.com
