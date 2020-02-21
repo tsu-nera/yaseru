@@ -26,7 +26,12 @@ https://github.com/tsu-nera/yaseru/blob/master/notebooks/weights_analysis.ipynb
 
 ## References
 
-- [Fitbit Developper](https://dev.fitbit.com)
-- [Fitbit API Reference](https://dev.fitbit.com/build/reference/web-api/)
-- [python-fitbit](https://github.com/orcasgit/python-fitbit)
-- [Health Planet API仕様書 Ver1.0](https://www.healthplanet.jp/apis/api.html)
+* [Fitbit Developper](https://dev.fitbit.com)
+* [Fitbit API Reference](https://dev.fitbit.com/build/reference/web-api/)
+* [python-fitbit](https://github.com/orcasgit/python-fitbit)
+* [Health Planet API仕様書 Ver1.0](https://www.healthplanet.jp/apis/api.html)
+* [あすけん](https://www.asken.jp/)
+
+## その他/参考モチベリンク集
+
+* [半年で40kg痩せた！ダイエットでわかるリーンなプロジェクトマネジメント手法 \- Qiita](https://qiita.com/hirokidaichi/items/9422841b5972b3a5664c)
