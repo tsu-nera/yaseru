@@ -10,7 +10,7 @@ https://github.com/tsu-nera/yaseru/blob/master/notebooks/weights_analysis.ipynb
 * BMI
 * 体脂肪率
 * 筋肉量
-* 内臓脂肪
+* 内臓脂肪レベル
 * 基礎代謝量
 * 体内年齢
 * 推定骨量
