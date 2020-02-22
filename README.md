@@ -2,7 +2,31 @@
 
 デブ脱出プロジェクト
 
-https://github.com/tsu-nera/yaseru/blob/master/notebooks/weights_analysis.ipynb
+![f052b5687a1715e11f7780ee47c9fb21](https://user-images.githubusercontent.com/760627/75088385-d4608100-558f-11ea-8e75-afa1023589b6.png)
+
+## 概要
+
+2019年12月、体重が106キロあってさすがに豚みたいだったので、一念発起してダイエットをはじめました。
+
+目標は、40キロ体重を落として65キロになることです。
+
+エンジニアらしく、データエンジニアリングしながらダイエットします。
+具体期にはFitbitなどのデバイスからはライフログを収集して、分析、可視化していきます。
+
+## ChangeLog(抜粋)
+
+* 2020/01/29 95kg以下達成
+* 2020/01/07 100kg以下達成
+* 2019/12/01 ダイエット開始
+
+more: [here](https://github.com/tsu-nera/yaseru/blob/master/CHANGELOG.md)
+
+## 分析結果
+
+現在はcsvで保存したデータをJupyte Notebookで分析しているだけですが、
+いずれはデータ可視化ツールを使って公開したいです。
+
+* https://github.com/tsu-nera/yaseru/blob/master/notebooks/weights_analysis.ipynb
 
 ## データ取得項目
 
