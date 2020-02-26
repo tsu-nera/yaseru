@@ -3,6 +3,7 @@ from invoke import task
 from src.utils.daily import get_daily, merge_daily
 from src.lib.weight import Weight
 from src.lib.calory import Calory
+from src.lib.activity import Activity
 from src.lib.health_planet import HealthPlanet
 
 from src.constants.common import DAILY_RAWDATA_WEIGHT_PATH, DAILY_RAWDATA_CALORY_PATH, DAILY_RAWDATA_HEALTHPLANET_PATH  # noqa
@@ -84,3 +85,10 @@ def post_weight(c, value):
 def post_weight_fat(c, value, fat):
     weight = Weight()
     weight.post(value=float(value), fat=float(fat))
+
+
+@task
+def get_activity(c, days):
+    activity = Activity()
+    activity.get_pastdays(int(days))
+    activity.display()

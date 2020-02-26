@@ -87,3 +87,8 @@ class Fitbit():
             "calory_in": int(d["value"])
         } for a, b, c, d in zip(calories, calories_bmr, activity_calories,
                                 calories_in)]
+
+    def get_activities(self, base_date, end_date):
+        activities = self.client.activities_list(base_date=base_date)
+
+        print(activities)

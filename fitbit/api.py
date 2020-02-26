@@ -347,3 +347,9 @@ class Fitbit(object):
 
             url = base_url.format(*self._get_common_args())
             self.make_request(url, data=fat_payload)
+
+    def activities_list(self, base_date=None, user_id=None):
+        url = "{0}/{1}/user/{2}/activities/list.json".format(
+            *self._get_common_args(user_id))
+
+        return self.make_request(url, afterDate=base_date)
