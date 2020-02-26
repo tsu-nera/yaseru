@@ -71,6 +71,7 @@ class FitbitOauth2Client(object):
     def make_request(self, url, data=None, method=None, **kwargs):
         data = data or {}
         method = method or ('POST' if data else 'GET')
+        print(method, data, url)
         response = self._request(method,
                                  url,
                                  data=data,
@@ -178,6 +179,7 @@ class Fitbit(object):
         kwargs['headers'] = headers
 
         method = kwargs.get('method', 'POST' if 'data' in kwargs else 'GET')
+        kwargs['method'] = method
         response = self.client.make_request(*args, **kwargs)
 
         if response.status_code == 202:
@@ -352,4 +354,11 @@ class Fitbit(object):
         url = "{0}/{1}/user/{2}/activities/list.json".format(
             *self._get_common_args(user_id))
 
-        return self.make_request(url, afterDate=base_date)
+        payload = {
+            "afterDate": "2020-02-20",
+            "sort": "asc",
+            "limit": 20,
+            "offset": 0
+        }
+
+        return self.make_request(url, payload)
