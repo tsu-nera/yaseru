@@ -355,7 +355,7 @@ class Fitbit(object):
             *self._get_common_args(user_id))
 
         params = {
-            "afterDate": "2020-02-20",
+            "afterDate": base_date,
             "sort": "asc",
             "limit": 20,
             "offset": 0

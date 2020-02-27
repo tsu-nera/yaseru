@@ -1,13 +1,12 @@
 import fitbit
 from ast import literal_eval
 
-import pprint
+from datetime import datetime as dt
 
 import sys
 sys.path.append('../src')
 
 import src.env as env  # noqa
-from datetime import datetime as dt
 
 TOKEN_FILE = "src/token.json"
 
@@ -94,8 +93,6 @@ class Fitbit():
     def get_activities(self, base_date, end_date):
         activities = self.client.activities_list(
             base_date=base_date)["activities"]
-
-        pprint.pprint(activities[0])
 
         def _parse_datetime(x):
             fmt = '%Y-%m-%dT%H:%M:%S.000+09:00'
