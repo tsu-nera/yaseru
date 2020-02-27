@@ -5,15 +5,17 @@ import os
 from src.lib.weight import Weight
 from src.lib.calory import Calory
 from src.lib.health_planet import HealthPlanet
+from src.lib.activity import Activity
 
-from src.constants.common import DAILY_RAWDATA_WEIGHT_PATH, DAILY_RAWDATA_CALORY_PATH, DAILY_RAWDATA_HEALTHPLANET_PATH
-from src.constants.common import ALL_CALORIES_PATH, ALL_WEIGHTS_PATH, ALL_HEALTHPLANETS_PATH
+from src.constants.common import DAILY_RAWDATA_WEIGHT_PATH, DAILY_RAWDATA_CALORY_PATH, DAILY_RAWDATA_HEALTHPLANET_PATH, DAILY_RAWDATA_ACTIVITY_PATH
+from src.constants.common import ALL_CALORIES_PATH, ALL_WEIGHTS_PATH, ALL_HEALTHPLANETS_PATH, ALL_ACTIVITIES_PATH
 
 
 def get_daily(year=None, month=None, day=None):
     weight = Weight()
     calory = Calory()
     hp = HealthPlanet()
+    activity = Activity()
 
     if year and month and day:
         base_datetime = datetime.datetime(year, month, day, 0, 0, 0)
@@ -33,10 +35,13 @@ def get_daily(year=None, month=None, day=None):
     # from Fitbit
     weight.get_to_csv(DAILY_RAWDATA_WEIGHT_PATH, base_datetime, end_datetime)
     calory.get_to_csv(DAILY_RAWDATA_CALORY_PATH, base_datetime, end_datetime)
+    activity.get_to_csv(DAILY_RAWDATA_ACTIVITY_PATH, base_datetime,
+                        end_datetime)
 
     weight.display()
     calory.display()
     hp.display()
+    activity.display()
 
 
 def merge_daily():
@@ -44,7 +49,7 @@ def merge_daily():
         return pd.concat([df_master, df_daily], sort=False).drop_duplicates(
             subset=["date", "weight"]).sort_values("date")
 
-    def _merge_to_master_for_calory(df_master, df_daily):
+    def _merge_to_master2(df_master, df_daily):
         return pd.concat(
             [df_master, df_daily],
             sort=False).drop_duplicates(subset=["date"]).sort_values("date")
@@ -60,8 +65,8 @@ def merge_daily():
         df_all = pd.read_csv(all_data_path)
         df_target = pd.read_csv(target_data_path)
 
-        if "calories" in all_data_path:
-            df_all = _merge_to_master_for_calory(df_all, df_target)
+        if "calories" or "activities" in all_data_path:
+            df_all = _merge_to_master2(df_all, df_target)
         else:
             df_all = _merge_to_master(df_all, df_target)
 
@@ -70,3 +75,4 @@ def merge_daily():
     _merge(ALL_CALORIES_PATH, DAILY_RAWDATA_CALORY_PATH)
     _merge(ALL_WEIGHTS_PATH, DAILY_RAWDATA_WEIGHT_PATH)
     _merge(ALL_HEALTHPLANETS_PATH, DAILY_RAWDATA_HEALTHPLANET_PATH)
+    _merge(ALL_ACTIVITIES_PATH, DAILY_RAWDATA_ACTIVITY_PATH)

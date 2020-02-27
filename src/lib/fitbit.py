@@ -94,16 +94,26 @@ class Fitbit():
         activities = self.client.activities_list(
             base_date=base_date)["activities"]
 
+        def _date_time(x):
+            return dt.strftime(x, "%Y-%m-%d %H:%M:%S")
+
         def _parse_datetime(x):
             fmt = '%Y-%m-%dT%H:%M:%S.000+09:00'
-            t = dt.strptime(x, fmt)
+            return dt.strptime(x, fmt)
 
-            return dt.strftime(t, "%Y-%m-%d %H:%M:%S")
+        def _output_datetime(x):
+            return _date_time(_parse_datetime(x))
+
+        def _check_date(x, y):
+            print(y)
+            return x.date() == y.date()
 
         return [{
-            "date": _parse_datetime(x["startTime"]),
+            "date": _output_datetime(x["startTime"]),
             "calories": x["calories"],
             "evaluation": int(x["elevationGain"]),
             "duration": round(x["duration"] / (1000 * 60), 1),
             "distance": round(x["distance"], 1)
-        } for x in activities if x["activityName"] == "サイクリング"]
+        } for x in activities if (x["activityName"] == "サイクリング" and (
+            base_date == _parse_datetime(x["startTime"]).strftime('%Y-%m-%d')))
+                ]

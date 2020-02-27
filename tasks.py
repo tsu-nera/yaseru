@@ -6,7 +6,8 @@ from src.lib.calory import Calory
 from src.lib.activity import Activity
 from src.lib.health_planet import HealthPlanet
 
-from src.constants.common import DAILY_RAWDATA_WEIGHT_PATH, DAILY_RAWDATA_CALORY_PATH, DAILY_RAWDATA_HEALTHPLANET_PATH  # noqa
+from src.constants.common import DAILY_RAWDATA_WEIGHT_PATH, DAILY_RAWDATA_CALORY_PATH
+from src.constants.common import DAILY_RAWDATA_HEALTHPLANET_PATH, DAILY_RAWDATA_ACTIVITY_PATH
 
 
 @task
@@ -92,3 +93,9 @@ def get_activity(c, days):
     activity = Activity()
     activity.get_pastdays(int(days))
     activity.display()
+
+
+@task
+def save_activity(c, days):
+    activity = Activity()
+    activity.get_pastdays_to_csv(DAILY_RAWDATA_ACTIVITY_PATH, int(days))
