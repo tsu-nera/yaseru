@@ -1,10 +1,13 @@
 import fitbit
 from ast import literal_eval
 
+import pprint
+
 import sys
 sys.path.append('../src')
 
 import src.env as env  # noqa
+from datetime import datetime as dt
 
 TOKEN_FILE = "src/token.json"
 
@@ -89,6 +92,21 @@ class Fitbit():
                                 calories_in)]
 
     def get_activities(self, base_date, end_date):
-        activities = self.client.activities_list(base_date=base_date)
+        activities = self.client.activities_list(
+            base_date=base_date)["activities"]
 
-        print(activities)
+        pprint.pprint(activities[0])
+
+        def _parse_datetime(x):
+            fmt = '%Y-%m-%dT%H:%M:%S.000+09:00'
+            t = dt.strptime(x, fmt)
+
+            return dt.strftime(t, "%Y-%m-%d %H:%M:%S")
+
+        return [{
+            "date": _parse_datetime(x["startTime"]),
+            "calories": x["calories"],
+            "evaluation": int(x["elevationGain"]),
+            "duration": round(x["duration"] / (1000 * 60), 1),
+            "distance": round(x["distance"], 1)
+        } for x in activities if x["activityName"] == "サイクリング"]
