@@ -3,6 +3,8 @@ import datetime
 import json
 import requests
 
+from urllib.parse import urlencode
+
 from requests.auth import HTTPBasicAuth
 from requests_oauthlib import OAuth2Session
 
@@ -71,14 +73,12 @@ class FitbitOauth2Client(object):
     def make_request(self, url, data=None, method=None, **kwargs):
         data = data or {}
         method = method or ('POST' if data else 'GET')
-        print(method, data, url)
         response = self._request(method,
                                  url,
                                  data=data,
                                  client_id=self.client_id,
                                  client_secret=self.client_secret,
                                  **kwargs)
-
         exceptions.detect_and_raise_error(response)
 
         return response
@@ -351,14 +351,16 @@ class Fitbit(object):
             self.make_request(url, data=fat_payload)
 
     def activities_list(self, base_date=None, user_id=None):
-        url = "{0}/{1}/user/{2}/activities/list.json".format(
+        url_base = "{0}/{1}/user/{2}/activities/list.json".format(
             *self._get_common_args(user_id))
 
-        payload = {
+        params = {
             "afterDate": "2020-02-20",
             "sort": "asc",
             "limit": 20,
             "offset": 0
         }
 
-        return self.make_request(url, payload)
+        url = url_base + "&" + urlencode(params)
+
+        return self.make_request(url)
