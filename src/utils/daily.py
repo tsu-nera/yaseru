@@ -50,9 +50,8 @@ def merge_daily():
             subset=["date", "weight"]).sort_values("date")
 
     def _merge_to_master2(df_master, df_daily):
-        return pd.concat(
-            [df_master, df_daily],
-            sort=False).drop_duplicates(subset=["date"]).sort_values("date")
+        return pd.concat([df_master, df_daily], sort=False).drop_duplicates(
+            subset=["date"], keep="last").sort_values("date")
 
     def _is_valid_file(path):
         return os.path.exists(path) and os.path.getsize(path) > 1
