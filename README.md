@@ -2,7 +2,7 @@
 
 デブ脱出プロジェクト
 
-![f052b5687a1715e11f7780ee47c9fb21](https://user-images.githubusercontent.com/760627/75088385-d4608100-558f-11ea-8e75-afa1023589b6.png)
+<img width="1340" alt="daf0f0897db28611ae6d10df21da2b8c" src="https://user-images.githubusercontent.com/760627/75547787-121d4800-5a6f-11ea-95b1-bd4c159a3246.png">
 
 ## 概要
 
