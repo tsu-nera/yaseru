@@ -1,6 +1,8 @@
 import fitbit
 from ast import literal_eval
 
+from datetime import datetime as dt
+
 import sys
 sys.path.append('../src')
 
@@ -87,3 +89,35 @@ class Fitbit():
             "calory_in": int(d["value"])
         } for a, b, c, d in zip(calories, calories_bmr, activity_calories,
                                 calories_in)]
+
+    def get_activities(self, base_date, end_date):
+        activities = self.client.activities_list(
+            base_date=base_date)["activities"]
+
+        def _date_time(x):
+            return dt.strftime(x, "%Y-%m-%d %H:%M:%S")
+
+        def _parse_datetime(x):
+            fmt = '%Y-%m-%dT%H:%M:%S.000+09:00'
+            return dt.strptime(x, fmt)
+
+        def _output_datetime(x):
+            return _date_time(_parse_datetime(x))
+
+        def _check_date(x, y):
+            return x.date() == y.date()
+
+        def _cond(x, base_date):
+            a = x["activityName"] == "サイクリング"
+            b = base_date == _parse_datetime(
+                x["startTime"]).strftime('%Y-%m-%d')
+
+            return a and b
+
+        return [{
+            "date": _output_datetime(x["startTime"]),
+            "calories": x["calories"],
+            "evaluation": int(x["elevationGain"]),
+            "duration": round(x["duration"] / (1000 * 60), 1),
+            "distance": round(x["distance"], 1)
+        } for x in activities if _cond(x, base_date)]

@@ -3,6 +3,8 @@ import datetime
 import json
 import requests
 
+from urllib.parse import urlencode
+
 from requests.auth import HTTPBasicAuth
 from requests_oauthlib import OAuth2Session
 
@@ -77,7 +79,6 @@ class FitbitOauth2Client(object):
                                  client_id=self.client_id,
                                  client_secret=self.client_secret,
                                  **kwargs)
-
         exceptions.detect_and_raise_error(response)
 
         return response
@@ -178,6 +179,7 @@ class Fitbit(object):
         kwargs['headers'] = headers
 
         method = kwargs.get('method', 'POST' if 'data' in kwargs else 'GET')
+        kwargs['method'] = method
         response = self.client.make_request(*args, **kwargs)
 
         if response.status_code == 202:
@@ -347,3 +349,18 @@ class Fitbit(object):
 
             url = base_url.format(*self._get_common_args())
             self.make_request(url, data=fat_payload)
+
+    def activities_list(self, base_date=None, end_date=None, user_id=None):
+        url_base = "{0}/{1}/user/{2}/activities/list.json".format(
+            *self._get_common_args(user_id))
+
+        params = {
+            "afterDate": base_date,
+            "sort": "asc",
+            "limit": 20,
+            "offset": 0
+        }
+
+        url = url_base + "&" + urlencode(params)
+
+        return self.make_request(url)
