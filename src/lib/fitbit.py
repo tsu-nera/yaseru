@@ -105,8 +105,14 @@ class Fitbit():
             return _date_time(_parse_datetime(x))
 
         def _check_date(x, y):
-            print(y)
             return x.date() == y.date()
+
+        def _cond(x, base_date):
+            a = x["activityName"] == "サイクリング"
+            b = base_date == _parse_datetime(
+                x["startTime"]).strftime('%Y-%m-%d')
+
+            return a and b
 
         return [{
             "date": _output_datetime(x["startTime"]),
@@ -114,6 +120,4 @@ class Fitbit():
             "evaluation": int(x["elevationGain"]),
             "duration": round(x["duration"] / (1000 * 60), 1),
             "distance": round(x["distance"], 1)
-        } for x in activities if (x["activityName"] == "サイクリング" and (
-            base_date == _parse_datetime(x["startTime"]).strftime('%Y-%m-%d')))
-                ]
+        } for x in activities if _cond(x, base_date)]
