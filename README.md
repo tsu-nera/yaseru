@@ -41,6 +41,8 @@ more: [here](https://github.com/tsu-nera/yaseru/blob/master/CHANGELOG.md)
 * 消費カロリー
 * 摂取カロリー
 * 運動カロリー
+* サイクリング走行距離
+* サイクリング走行時間
 
 ## データ取得元
 
