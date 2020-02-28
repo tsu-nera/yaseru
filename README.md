@@ -23,10 +23,13 @@ more: [here](https://github.com/tsu-nera/yaseru/blob/master/CHANGELOG.md)
 
 ## 分析結果
 
-現在はcsvで保存したデータをJupyte Notebookで分析しているだけですが、
-いずれはデータ可視化ツールを使って公開したいです。
+現在はcsvで保存したデータをJupyte Notebookで分析しています。
 
 * https://github.com/tsu-nera/yaseru/blob/master/notebooks/weights_analysis.ipynb
+
+また、csvデータをGoogle BigQueryにアップロードして、Googleデータポータルで可視化しています。
+
+* https://datastudio.google.com/u/0/reporting/f4bdd119-b10f-4e80-b4a3-49d50a1901ce/page/26gGB
 
 ## データ取得項目
 
@@ -57,7 +60,3 @@ more: [here](https://github.com/tsu-nera/yaseru/blob/master/CHANGELOG.md)
 * [python-fitbit](https://github.com/orcasgit/python-fitbit)
 * [Health Planet API仕様書 Ver1.0](https://www.healthplanet.jp/apis/api.html)
 * [あすけん](https://www.asken.jp/)
-
-## その他/参考モチベリンク集
-
-* [半年で40kg痩せた！ダイエットでわかるリーンなプロジェクトマネジメント手法 \- Qiita](https://qiita.com/hirokidaichi/items/9422841b5972b3a5664c)
