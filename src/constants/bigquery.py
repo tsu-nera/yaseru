@@ -1,0 +1,4 @@
+PROJECT_ID = "yaseru"
+DATASET_NAME = "daily"
+
+DATASET_ID = ".".join([PROJECT_ID, DATASET_NAME])
