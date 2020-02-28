@@ -1,5 +1,6 @@
 .vscode
 rawdata
 .ipynb_checkpoints
-src/token.json
 .env
+config/google_application_credentials.json
+config/fitbit_token.json

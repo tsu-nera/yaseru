@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
+import os
 import pandas as pd
 import pprint as pp
 
@@ -47,6 +48,8 @@ class Base(metaclass=ABCMeta):
 
         if len(self.data) != 0:
             self.to_csv(path)
+        else:
+            os.remove(path)
 
     def display(self):
         pp.pprint(self.data)

@@ -9,6 +9,7 @@ from src.lib.activity import Activity
 
 from src.constants.common import DAILY_RAWDATA_WEIGHT_PATH, DAILY_RAWDATA_CALORY_PATH, DAILY_RAWDATA_HEALTHPLANET_PATH, DAILY_RAWDATA_ACTIVITY_PATH
 from src.constants.common import ALL_CALORIES_PATH, ALL_WEIGHTS_PATH, ALL_HEALTHPLANETS_PATH, ALL_ACTIVITIES_PATH
+from src.constants.bigquery import DATASET_ID, PROJECT_ID, DATASET_NAME
 
 
 def get_daily(year=None, month=None, day=None):
@@ -44,18 +45,21 @@ def get_daily(year=None, month=None, day=None):
     activity.display()
 
 
+def _is_valid_file(path):
+    return os.path.exists(path) and os.path.getsize(path) > 1
+
+
+def _merge_to_master(df_master, df_daily):
+    return pd.concat([df_master, df_daily], sort=False).drop_duplicates(
+        subset=["date", "weight"]).sort_values("date")
+
+
+def _merge_to_master2(df_master, df_daily):
+    return pd.concat([df_master, df_daily], sort=False).drop_duplicates(
+        subset=["date"], keep="last").sort_values("date")
+
+
 def merge_daily():
-    def _merge_to_master(df_master, df_daily):
-        return pd.concat([df_master, df_daily], sort=False).drop_duplicates(
-            subset=["date", "weight"]).sort_values("date")
-
-    def _merge_to_master2(df_master, df_daily):
-        return pd.concat([df_master, df_daily], sort=False).drop_duplicates(
-            subset=["date"], keep="last").sort_values("date")
-
-    def _is_valid_file(path):
-        return os.path.exists(path) and os.path.getsize(path) > 1
-
     def _merge(all_data_path, target_data_path):
         if not _is_valid_file(all_data_path) or not _is_valid_file(
                 target_data_path):
@@ -75,3 +79,33 @@ def merge_daily():
     _merge(ALL_WEIGHTS_PATH, DAILY_RAWDATA_WEIGHT_PATH)
     _merge(ALL_HEALTHPLANETS_PATH, DAILY_RAWDATA_HEALTHPLANET_PATH)
     _merge(ALL_ACTIVITIES_PATH, DAILY_RAWDATA_ACTIVITY_PATH)
+
+
+def upload_daily_to_bq():
+    def _upload(table_name, target_data_path):
+        if not _is_valid_file(target_data_path):
+            return
+
+        df_target = pd.read_csv(target_data_path)
+
+        query = "SELECT * FROM {}.{};".format(DATASET_ID, table_name)
+        df_bq = pd.read_gbq(query, dialect="standard")
+
+        df_bq["date"] = df_bq["date"].apply(
+            lambda x: x.strftime('%Y-%m-%d %H:%M:%S'))
+
+        if "calory" or "activity" in target_data_path:
+            df_bq = _merge_to_master2(df_bq, df_target)
+        else:
+            df_bq = _merge_to_master(df_bq, df_target)
+
+        df_bq["date"] = df_bq["date"].apply(
+            lambda x: datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
+        df_bq.to_gbq(".".join([DATASET_NAME, table_name]),
+                     PROJECT_ID,
+                     if_exists="replace")
+
+    _upload("calories", DAILY_RAWDATA_CALORY_PATH)
+    _upload("weights", DAILY_RAWDATA_WEIGHT_PATH)
+    _upload("healthplanets", DAILY_RAWDATA_HEALTHPLANET_PATH)
+    _upload("activities", DAILY_RAWDATA_ACTIVITY_PATH)

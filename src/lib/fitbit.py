@@ -8,7 +8,7 @@ sys.path.append('../src')
 
 import src.env as env  # noqa
 
-TOKEN_FILE = "src/token.json"
+TOKEN_FILE = "config/fitbit_token.json"
 
 tokens = open(TOKEN_FILE).read()
 token_dict = literal_eval(tokens)

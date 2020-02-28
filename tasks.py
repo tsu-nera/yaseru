@@ -1,6 +1,6 @@
 from invoke import task
 
-from src.utils.daily import get_daily, merge_daily
+from src.utils.daily import get_daily, merge_daily, upload_daily_to_bq
 from src.lib.weight import Weight
 from src.lib.calory import Calory
 from src.lib.activity import Activity
@@ -50,6 +50,19 @@ def save_hp(c, days):
 
 
 @task
+def get_activity(c, days):
+    activity = Activity()
+    activity.get_pastdays(int(days))
+    activity.display()
+
+
+@task
+def save_activity(c, days):
+    activity = Activity()
+    activity.get_pastdays_to_csv(DAILY_RAWDATA_ACTIVITY_PATH, int(days))
+
+
+@task
 def sync_hp_fitbit(c, days):
     hp = HealthPlanet()
     weight = Weight()
@@ -77,6 +90,11 @@ def merge(c):
 
 
 @task
+def upload(c):
+    upload_daily_to_bq()
+
+
+@task
 def post_weight(c, value):
     weight = Weight()
     weight.post(value=float(value))
@@ -86,16 +104,3 @@ def post_weight(c, value):
 def post_weight_fat(c, value, fat):
     weight = Weight()
     weight.post(value=float(value), fat=float(fat))
-
-
-@task
-def get_activity(c, days):
-    activity = Activity()
-    activity.get_pastdays(int(days))
-    activity.display()
-
-
-@task
-def save_activity(c, days):
-    activity = Activity()
-    activity.get_pastdays_to_csv(DAILY_RAWDATA_ACTIVITY_PATH, int(days))
