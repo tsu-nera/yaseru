@@ -46,10 +46,11 @@ class Base(metaclass=ABCMeta):
     def get_to_csv(self, path, base_date=None, end_date=None):
         self.get(base_date, end_date)
 
+        if os.path.exists(path):
+            os.remove(path)
+
         if len(self.data) != 0:
             self.to_csv(path)
-        else:
-            os.remove(path)
 
     def display(self):
         pp.pprint(self.data)
