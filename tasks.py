@@ -77,11 +77,13 @@ def sync_hp_fitbit(c, days):
 @task
 def daily(c, year, month, day):
     get_daily(int(year), int(month), int(day))
+    upload_daily_to_bq()
 
 
 @task
 def daily_today(c):
     get_daily()
+    upload_daily_to_bq()
 
 
 @task
