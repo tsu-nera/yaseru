@@ -106,3 +106,9 @@ def post_weight(c, value):
 def post_weight_fat(c, value, fat):
     weight = Weight()
     weight.post(value=float(value), fat=float(fat))
+
+
+@task
+def daily_merge(c, year, month, day):
+    daily(c, year, month, day)
+    merge(c)
