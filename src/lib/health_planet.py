@@ -116,16 +116,16 @@ class HealthPlanet(Base):
         for k, v in output_dict.items():
             v['date'] = dt.strptime(k, '%Y%m%d%H%M')
 
-            v[HP_TAG_NAME_BASAL_METABOLIC_RATE] = int(
-                v[HP_TAG_NAME_BASAL_METABOLIC_RATE])
-            v[HP_TAG_NAME_BODY_AGE] = int(v[HP_TAG_NAME_BODY_AGE])
+            # v[HP_TAG_NAME_BASAL_METABOLIC_RATE] = int(
+            #     v[HP_TAG_NAME_BASAL_METABOLIC_RATE])
+            # v[HP_TAG_NAME_BODY_AGE] = int(v[HP_TAG_NAME_BODY_AGE])
             v[HP_TAG_NAME_BODY_FAT_PARCENTAGE] = float(
                 v[HP_TAG_NAME_BODY_FAT_PARCENTAGE])
-            v[HP_TAG_NAME_MUSCLE_MASS] = float(v[HP_TAG_NAME_MUSCLE_MASS])
-            v[HP_TAG_NAME_ESTIMATED_BONE_MASS] = float(
-                v[HP_TAG_NAME_ESTIMATED_BONE_MASS])
-            v[HP_TAG_NAME_VISCERAL_FAT_LEVEL] = float(
-                v[HP_TAG_NAME_VISCERAL_FAT_LEVEL])
+            # v[HP_TAG_NAME_MUSCLE_MASS] = float(v[HP_TAG_NAME_MUSCLE_MASS])
+            # v[HP_TAG_NAME_ESTIMATED_BONE_MASS] = float(
+            #     v[HP_TAG_NAME_ESTIMATED_BONE_MASS])
+            # v[HP_TAG_NAME_VISCERAL_FAT_LEVEL] = float(
+            #     v[HP_TAG_NAME_VISCERAL_FAT_LEVEL])
             v[HP_TAG_NAME_WEIGHT] = float(v[HP_TAG_NAME_WEIGHT])
 
             output_list.append(v)
