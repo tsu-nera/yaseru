@@ -10,8 +10,7 @@
 
 目標は、40キロ体重を落として65キロになることです。
 
-エンジニアらしく、データエンジニアリングしながらダイエットします。
-具体期にはFitbitなどのデバイスからはライフログを収集して、分析、可視化していきます。
+データエンジニアリングしながらダイエットします。具体期にはFitbitなどのデバイスからはライフログを収集して、分析、可視化していきます。
 
 ## ChangeLog(抜粋)
 
@@ -38,6 +37,8 @@ more: [here](https://github.com/tsu-nera/yaseru/blob/master/CHANGELOG.md)
 
 ## データ取得項目
 
+Fitbit故障 & TANITA API仕様変更により、現在ほとんどデータが取れません。
+
 * 体重
 * BMI
 * 体脂肪率
@@ -56,7 +57,6 @@ more: [here](https://github.com/tsu-nera/yaseru/blob/master/CHANGELOG.md)
 
 * [Fitbit](https://www.fitbit.com/)
 * [HealthPlanet(タニタ)](https://www.healthplanet.jp/)
-* [MyFitnessPal](https://www.myfitnesspal.com/ja/)
 
 ## References
 
@@ -64,4 +64,3 @@ more: [here](https://github.com/tsu-nera/yaseru/blob/master/CHANGELOG.md)
 * [Fitbit API Reference](https://dev.fitbit.com/build/reference/web-api/)
 * [python-fitbit](https://github.com/orcasgit/python-fitbit)
 * [Health Planet API仕様書 Ver1.0](https://www.healthplanet.jp/apis/api.html)
-* [あすけん](https://www.asken.jp/)
